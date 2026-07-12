@@ -16,5 +16,6 @@ Each record follows the same shape:
 | [0001](0001-npm-workspaces.md) | npm workspaces, no monorepo orchestrator | 2026-07-12 |
 | [0002](0002-styling-tokens-over-nativewind.md) | Typed design tokens + StyleSheet; NativeWind deferred | 2026-07-12 |
 | [0003](0003-biome-for-lint-and-format.md) | Biome for linting and formatting | 2026-07-12 |
+| [0004](0004-local-exercise-seed-data.md) | Exercise catalog ships as local seed data first | 2026-07-12 |
 
 Add new records with the next number, in the same format, in the same pull request as the change they explain.
