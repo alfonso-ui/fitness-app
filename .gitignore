@@ -1,0 +1,23 @@
+# dependencies
+node_modules/
+
+# Expo / Metro
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+.metro-health-check*
+
+# environment variables — never commit secrets
+.env
+.env.*
+!.env.example
+
+# build artifacts
+*.tsbuildinfo
+
+# macOS
+.DS_Store
+
+# logs
+npm-debug.*
