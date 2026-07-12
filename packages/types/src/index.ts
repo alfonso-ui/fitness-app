@@ -8,3 +8,4 @@
 
 export type { Equipment, ExperienceLevel, MeasurementType, MuscleGroup } from './core';
 export type { Difficulty, Exercise, ExerciseMedia, MovementPattern } from './exercise';
+export type { Workout, WorkoutExercise, WorkoutTemplate } from './workout';
