@@ -2,7 +2,7 @@
 
 A living map of what actually exists in this repository. Update it when the architecture changes, not for every commit.
 
-_Last updated: 2026-07-17 (active workout / Focus Mode milestone)._
+_Last updated: 2026-07-18 (history + progress milestone)._
 
 ## Current state
 
@@ -16,7 +16,8 @@ fitness-app/                 npm-workspaces monorepo
 │   │       │   ├── (tabs)/            Home · Workouts · Exercises · Progress · Profile
 │   │       │   ├── exercise/[slug]    exercise detail (stack screen with header)
 │   │       │   ├── workout/[id]/      detail (+ Start/Resume) · edit · add-exercise
-│   │       │   └── session/[id]/      Focus Mode · summary · substitute (ADR 0006)
+│   │       │   ├── session/[id]/      Focus Mode · summary · substitute (ADR 0006)
+│   │       │   └── history/[id]       completed workout detail (+ repeat)
 │   │       ├── components/  ThemedText, ThemedView, ScreenPlaceholder, Button, Stepper,
 │   │       │                ExerciseCard, ExercisePickerList, FilterChip, SearchInput,
 │   │       │                RestTimerBar
@@ -25,7 +26,7 @@ fitness-app/                 npm-workspaces monorepo
 │   │       ├── stores/      workouts (ADR 0005) · session — active/completed sessions (ADR 0006);
 │   │       │                both Zustand + AsyncStorage, local-first
 │   │       ├── hooks/       useTheme, useColorScheme, useCountdown
-│   │       └── lib/         labels, format, confirm, id, session
+│   │       └── lib/         labels, format, confirm, id, session, history
 │   └── admin/               placeholder — out of MVP scope
 ├── packages/
 │   ├── ui/                  @fitness-app/ui — design tokens (colors/spacing/radii/typography), light+dark

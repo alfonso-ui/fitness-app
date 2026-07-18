@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { makeSet, sessionFromWorkout } from '@/lib/session';
+import { makeSet, sessionFromPrevious, sessionFromWorkout } from '@/lib/session';
 
 type SetPatch = Partial<Pick<SetLog, 'weight' | 'reps'>>;
 
@@ -15,6 +15,8 @@ type SessionState = {
   restEndsAt: string | null;
 
   startSession: (workout: Workout) => WorkoutSession;
+  /** Start a fresh session from a past one, using that session's own snapshot. */
+  repeatSession: (session: WorkoutSession) => WorkoutSession;
   updateSet: (sessionExerciseId: string, setId: string, patch: SetPatch) => void;
   completeSet: (sessionExerciseId: string, setId: string) => void;
   uncompleteSet: (sessionExerciseId: string, setId: string) => void;
@@ -67,6 +69,12 @@ export const useSessionStore = create<SessionState>()(
         const session = sessionFromWorkout(workout, get().completedSessions);
         set({ activeSession: session, restEndsAt: null });
         return session;
+      },
+
+      repeatSession: (session) => {
+        const repeated = sessionFromPrevious(session, get().completedSessions);
+        set({ activeSession: repeated, restEndsAt: null });
+        return repeated;
       },
 
       updateSet: (sessionExerciseId, setId, patch) => {

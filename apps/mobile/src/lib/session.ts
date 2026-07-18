@@ -7,34 +7,33 @@ export function makeSet(): SetLog {
   return { id: newId(), weight: null, reps: null, completed: false, isWarmup: false };
 }
 
+/** The target fields a session needs, shared by workouts and past sessions. */
+type PlannedExercise = Omit<SessionExercise, 'sets'>;
+
 /**
- * Snapshot a workout plan into a new active session. Targets are copied
- * so later edits to the workout never touch this session. Sets are
+ * Snapshot a plan into a new active session. Targets are copied so later
+ * edits to the source workout never touch this session. Sets are
  * pre-seeded and, where history exists, pre-filled with last time's
  * weight and reps so the user usually just confirms each set.
  */
-export function sessionFromWorkout(
-  workout: Workout,
-  history: WorkoutSession[] = [],
+function buildSession(
+  workoutId: string,
+  name: string,
+  plan: PlannedExercise[],
+  history: WorkoutSession[],
 ): WorkoutSession {
   return {
     id: newId(),
-    workoutId: workout.id,
-    name: workout.name,
+    workoutId,
+    name,
     status: 'active',
     currentExerciseIndex: 0,
     startedAt: new Date().toISOString(),
-    exercises: workout.exercises.map((exercise) => {
+    exercises: plan.map((exercise) => {
       const previous = previousPerformance(history, exercise.exerciseId);
       const setCount = Math.max(1, exercise.targetSets);
       return {
-        id: exercise.id,
-        exerciseId: exercise.exerciseId,
-        targetSets: exercise.targetSets,
-        targetRepsMin: exercise.targetRepsMin,
-        targetRepsMax: exercise.targetRepsMax,
-        restSeconds: exercise.restSeconds,
-        note: exercise.note,
+        ...exercise,
         sets: Array.from({ length: setCount }, (_ignored, index) => {
           const priorSet =
             previous?.sets[index] ?? previous?.sets[previous.sets.length - 1] ?? undefined;
@@ -47,6 +46,25 @@ export function sessionFromWorkout(
       };
     }),
   };
+}
+
+export function sessionFromWorkout(
+  workout: Workout,
+  history: WorkoutSession[] = [],
+): WorkoutSession {
+  return buildSession(workout.id, workout.name, workout.exercises, history);
+}
+
+/**
+ * Repeat a past session using its own snapshot, so it still works even
+ * if the source workout has since been edited or deleted.
+ */
+export function sessionFromPrevious(
+  previous: WorkoutSession,
+  history: WorkoutSession[] = [],
+): WorkoutSession {
+  const plan = previous.exercises.map(({ sets: _sets, ...targets }) => targets);
+  return buildSession(previous.workoutId, previous.name, plan, history);
 }
 
 export function completedSetCount(session: WorkoutSession): number {
