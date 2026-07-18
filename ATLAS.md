@@ -2,7 +2,7 @@
 
 A living map of what actually exists in this repository. Update it when the architecture changes, not for every commit.
 
-_Last updated: 2026-07-12 (exercise library milestone)._
+_Last updated: 2026-07-17 (active workout / Focus Mode milestone)._
 
 ## Current state
 
@@ -14,12 +14,18 @@ fitness-app/                 npm-workspaces monorepo
 │   │       ├── app/         file-based routes
 │   │       │   ├── _layout.tsx        root Stack + theme wiring
 │   │       │   ├── (tabs)/            Home · Workouts · Exercises · Progress · Profile
-│   │       │   └── exercise/[slug]    exercise detail (stack screen with header)
-│   │       ├── components/  ThemedText, ThemedView, ScreenPlaceholder,
-│   │       │                ExerciseCard, FilterChip, SearchInput
-│   │       ├── data/        exercises/ — local seed catalog, 34 exercises (ADR 0004)
-│   │       ├── hooks/       useTheme, useColorScheme
-│   │       └── lib/         labels (display names for domain enums)
+│   │       │   ├── exercise/[slug]    exercise detail (stack screen with header)
+│   │       │   ├── workout/[id]/      detail (+ Start/Resume) · edit · add-exercise
+│   │       │   └── session/[id]/      Focus Mode · summary · substitute (ADR 0006)
+│   │       ├── components/  ThemedText, ThemedView, ScreenPlaceholder, Button, Stepper,
+│   │       │                ExerciseCard, ExercisePickerList, FilterChip, SearchInput,
+│   │       │                RestTimerBar
+│   │       ├── data/        exercises/ — 34-exercise seed catalog (ADR 0004);
+│   │       │                templates — 4 starter workout templates
+│   │       ├── stores/      workouts (ADR 0005) · session — active/completed sessions (ADR 0006);
+│   │       │                both Zustand + AsyncStorage, local-first
+│   │       ├── hooks/       useTheme, useColorScheme, useCountdown
+│   │       └── lib/         labels, format, confirm, id, session
 │   └── admin/               placeholder — out of MVP scope
 ├── packages/
 │   ├── ui/                  @fitness-app/ui — design tokens (colors/spacing/radii/typography), light+dark
@@ -27,7 +33,8 @@ fitness-app/                 npm-workspaces monorepo
 │   └── config/              @fitness-app/config — shared tsconfig base
 ├── supabase/                placeholder — backend milestone
 └── docs/
-    └── decisions/           ADRs (0001 workspaces, 0002 styling, 0003 Biome)
+    └── decisions/           ADRs 0001–0006 (workspaces, styling, Biome,
+                             seed data, local persistence, active sessions)
 ```
 
 ## How things connect
