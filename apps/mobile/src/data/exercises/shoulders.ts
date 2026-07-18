@@ -1,0 +1,127 @@
+import { defineExercise } from './define';
+
+export const shoulderExercises = [
+  defineExercise({
+    slug: 'barbell-overhead-press',
+    name: 'Barbell Overhead Press',
+    description:
+      'The standing barbell press — the fundamental measure of upper-body pushing strength.',
+    instructions: [
+      'Hold the bar at shoulder height with hands just outside shoulder width.',
+      'Brace your core and squeeze your glutes.',
+      'Press the bar straight overhead, moving your head slightly back out of the way.',
+      'Finish with the bar over your mid-foot and your arms locked out.',
+      'Lower under control back to your shoulders.',
+    ],
+    tips: [
+      'Keep your ribs down — do not turn the press into a back-bend.',
+      'The bar path should be a straight vertical line.',
+    ],
+    primaryMuscle: 'shoulders',
+    secondaryMuscles: ['triceps', 'core', 'chest'],
+    equipment: 'barbell',
+    movementPattern: 'push_vertical',
+    difficulty: 'intermediate',
+    measurementType: 'weight_reps',
+    isUnilateral: false,
+    alternatives: ['seated-dumbbell-shoulder-press'],
+    tags: ['compound', 'strength'],
+  }),
+  defineExercise({
+    slug: 'seated-dumbbell-shoulder-press',
+    name: 'Seated Dumbbell Shoulder Press',
+    description:
+      'An overhead press with dumbbells and back support — shoulder-friendly and great for balanced development.',
+    instructions: [
+      'Sit on an upright bench with a dumbbell at each shoulder, palms facing forward.',
+      'Press the dumbbells overhead until your arms are straight.',
+      'Lower under control until the dumbbells are back at shoulder level.',
+    ],
+    tips: [
+      'Keep your lower back against the pad — no excessive arching.',
+      'Move both dumbbells at the same speed to stay balanced.',
+    ],
+    primaryMuscle: 'shoulders',
+    secondaryMuscles: ['triceps'],
+    equipment: 'dumbbell',
+    movementPattern: 'push_vertical',
+    difficulty: 'beginner',
+    measurementType: 'weight_reps',
+    isUnilateral: false,
+    alternatives: ['barbell-overhead-press'],
+    tags: ['compound', 'home'],
+  }),
+  defineExercise({
+    slug: 'dumbbell-lateral-raise',
+    name: 'Dumbbell Lateral Raise',
+    description:
+      'The go-to isolation movement for wider shoulders — raises light dumbbells out to the sides.',
+    instructions: [
+      'Stand tall with a light dumbbell in each hand at your sides.',
+      'Raise your arms out to the sides until they reach shoulder height.',
+      'Pause briefly, then lower under control.',
+    ],
+    tips: [
+      'Lead with your elbows and keep a slight bend in your arms.',
+      'Lighter than you think — momentum ruins this exercise.',
+    ],
+    primaryMuscle: 'shoulders',
+    secondaryMuscles: [],
+    equipment: 'dumbbell',
+    movementPattern: 'isolation',
+    difficulty: 'beginner',
+    measurementType: 'weight_reps',
+    isUnilateral: false,
+    alternatives: ['band-pull-apart'],
+    tags: ['isolation', 'home'],
+  }),
+  defineExercise({
+    slug: 'rear-delt-fly',
+    name: 'Rear Delt Fly',
+    description:
+      'A bent-over raise that targets the often-neglected rear shoulders and improves posture.',
+    instructions: [
+      'Hinge forward with a flat back, a light dumbbell in each hand hanging below you.',
+      'Raise your arms out to the sides, squeezing your shoulder blades together.',
+      'Lower under control back to the start.',
+    ],
+    tips: [
+      'Keep your neck neutral — look at the floor, not the mirror.',
+      'Small weights, strict form.',
+    ],
+    primaryMuscle: 'shoulders',
+    secondaryMuscles: ['back'],
+    equipment: 'dumbbell',
+    movementPattern: 'isolation',
+    difficulty: 'beginner',
+    measurementType: 'weight_reps',
+    isUnilateral: false,
+    alternatives: ['face-pull', 'band-pull-apart'],
+    tags: ['isolation', 'posture', 'home'],
+  }),
+  defineExercise({
+    slug: 'face-pull',
+    name: 'Face Pull',
+    description:
+      'A cable pull toward the face that strengthens the rear shoulders and upper back — excellent for shoulder health.',
+    instructions: [
+      'Set a rope attachment at upper-chest height on a cable machine.',
+      'Grip the rope with both hands, palms facing each other, and step back.',
+      'Pull the rope toward your face, spreading the ends apart beside your ears.',
+      'Return under control to the start.',
+    ],
+    tips: [
+      'Finish each rep with your upper arms in line with your shoulders.',
+      'Think "show off your biceps" at the end of the pull.',
+    ],
+    primaryMuscle: 'shoulders',
+    secondaryMuscles: ['back'],
+    equipment: 'cable',
+    movementPattern: 'pull_horizontal',
+    difficulty: 'beginner',
+    measurementType: 'weight_reps',
+    isUnilateral: false,
+    alternatives: ['rear-delt-fly', 'band-pull-apart'],
+    tags: ['cable', 'shoulder-health', 'posture'],
+  }),
+];

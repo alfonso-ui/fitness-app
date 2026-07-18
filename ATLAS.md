@@ -2,7 +2,7 @@
 
 A living map of what actually exists in this repository. Update it when the architecture changes, not for every commit.
 
-_Last updated: 2026-07-12 (foundation milestone)._
+_Last updated: 2026-07-12 (exercise library milestone)._
 
 ## Current state
 
@@ -13,9 +13,13 @@ fitness-app/                 npm-workspaces monorepo
 │   │   └── src/
 │   │       ├── app/         file-based routes
 │   │       │   ├── _layout.tsx        root Stack + theme wiring
-│   │       │   └── (tabs)/            Home · Workouts · Exercises · Progress · Profile
-│   │       ├── components/  ThemedText, ThemedView, ScreenPlaceholder
-│   │       └── hooks/       useTheme, useColorScheme
+│   │       │   ├── (tabs)/            Home · Workouts · Exercises · Progress · Profile
+│   │       │   └── exercise/[slug]    exercise detail (stack screen with header)
+│   │       ├── components/  ThemedText, ThemedView, ScreenPlaceholder,
+│   │       │                ExerciseCard, FilterChip, SearchInput
+│   │       ├── data/        exercises/ — local seed catalog, 34 exercises (ADR 0004)
+│   │       ├── hooks/       useTheme, useColorScheme
+│   │       └── lib/         labels (display names for domain enums)
 │   └── admin/               placeholder — out of MVP scope
 ├── packages/
 │   ├── ui/                  @fitness-app/ui — design tokens (colors/spacing/radii/typography), light+dark
