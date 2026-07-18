@@ -72,53 +72,66 @@ function SetRow({
 
       <View style={styles.steppers}>
         {mode === 'weight_reps' && (
-          <Stepper
-            label="Weight"
-            value={`${weight}`}
-            onDecrement={() =>
-              updateSet(sessionExerciseId, set.id, { weight: Math.max(0, weight - WEIGHT_STEP) })
-            }
-            onIncrement={() =>
-              updateSet(sessionExerciseId, set.id, { weight: weight + WEIGHT_STEP })
-            }
-            decrementDisabled={weight <= 0}
-          />
+          <View style={styles.stepperSlot}>
+            <Stepper
+              label="Weight"
+              value={`${weight}`}
+              onDecrement={() =>
+                updateSet(sessionExerciseId, set.id, { weight: Math.max(0, weight - WEIGHT_STEP) })
+              }
+              onIncrement={() =>
+                updateSet(sessionExerciseId, set.id, { weight: weight + WEIGHT_STEP })
+              }
+              decrementDisabled={weight <= 0}
+            />
+          </View>
         )}
-        <Stepper
-          label={mode === 'duration' ? 'Seconds' : 'Reps'}
-          value={`${reps}`}
-          onDecrement={() =>
-            updateSet(sessionExerciseId, set.id, { reps: Math.max(0, reps - repsStep) })
-          }
-          onIncrement={() => updateSet(sessionExerciseId, set.id, { reps: reps + repsStep })}
-          decrementDisabled={reps <= 0}
-        />
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ checked: set.completed }}
-          accessibilityLabel={
-            set.completed ? `Set ${index + 1} done, tap to undo` : `Complete set ${index + 1}`
-          }
-          onPress={() =>
-            set.completed
-              ? uncompleteSet(sessionExerciseId, set.id)
-              : completeSet(sessionExerciseId, set.id)
-          }
-          style={[
-            styles.check,
-            {
-              backgroundColor: set.completed ? theme.colors.success : theme.colors.background,
-              borderColor: set.completed ? theme.colors.success : theme.colors.border,
-            },
-          ]}
-        >
-          <Ionicons
-            name="checkmark"
-            size={26}
-            color={set.completed ? theme.colors.onPrimary : theme.colors.textSecondary}
+        <View style={styles.stepperSlot}>
+          <Stepper
+            label={mode === 'duration' ? 'Seconds' : 'Reps'}
+            value={`${reps}`}
+            onDecrement={() =>
+              updateSet(sessionExerciseId, set.id, { reps: Math.max(0, reps - repsStep) })
+            }
+            onIncrement={() => updateSet(sessionExerciseId, set.id, { reps: reps + repsStep })}
+            decrementDisabled={reps <= 0}
           />
-        </Pressable>
+        </View>
       </View>
+
+      {/* Full-width so the primary action stays an easy one-handed tap. */}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{ checked: set.completed }}
+        accessibilityLabel={
+          set.completed ? `Set ${index + 1} done, tap to undo` : `Complete set ${index + 1}`
+        }
+        onPress={() =>
+          set.completed
+            ? uncompleteSet(sessionExerciseId, set.id)
+            : completeSet(sessionExerciseId, set.id)
+        }
+        style={({ pressed }) => [
+          styles.check,
+          {
+            backgroundColor: set.completed
+              ? theme.colors.success
+              : pressed
+                ? theme.colors.surfaceSelected
+                : theme.colors.background,
+            borderColor: set.completed ? theme.colors.success : theme.colors.border,
+          },
+        ]}
+      >
+        <Ionicons
+          name={set.completed ? 'checkmark-circle' : 'checkmark'}
+          size={22}
+          color={set.completed ? theme.colors.onPrimary : theme.colors.textSecondary}
+        />
+        <ThemedText variant="bodyBold" color={set.completed ? 'onPrimary' : 'textSecondary'}>
+          {set.completed ? 'Done' : 'Complete set'}
+        </ThemedText>
+      </Pressable>
     </View>
   );
 }
@@ -397,16 +410,19 @@ const styles = StyleSheet.create({
   steppers: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'space-between',
     gap: spacing.sm,
   },
+  stepperSlot: {
+    flex: 1,
+  },
   check: {
-    width: minTouchTarget + 8,
-    height: minTouchTarget + 8,
-    borderRadius: radii.full,
-    borderWidth: 2,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: spacing.sm,
+    minHeight: minTouchTarget,
+    borderRadius: radii.md,
+    borderWidth: 2,
   },
   bottomBar: {
     flexDirection: 'row',

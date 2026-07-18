@@ -36,6 +36,17 @@ export function formatSetLine(sets: SetLog[]): string {
   return sets.map((set) => formatSet(set).replace(/ /g, '')).join(' · ');
 }
 
+/** "Today", "Yesterday", or a short date like "17 Jul". */
+export function formatDate(iso: string): string {
+  const date = new Date(iso);
+  const startOfDay = (value: Date) =>
+    new Date(value.getFullYear(), value.getMonth(), value.getDate()).getTime();
+  const dayDiff = Math.round((startOfDay(new Date()) - startOfDay(date)) / 86400000);
+  if (dayDiff === 0) return 'Today';
+  if (dayDiff === 1) return 'Yesterday';
+  return date.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+}
+
 /** Whole-minute duration: "42 min", "1h 05 min". */
 export function formatDuration(ms: number): string {
   const totalMinutes = Math.round(ms / 60000);

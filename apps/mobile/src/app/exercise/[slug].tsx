@@ -8,17 +8,24 @@ import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { findExercise } from '@/data/exercises';
 import { useTheme } from '@/hooks/use-theme';
+import { formatDate, formatSet, formatSetLine } from '@/lib/format';
+import { exerciseHistory, personalBest } from '@/lib/history';
 import {
   difficultyLabels,
   equipmentLabels,
   movementPatternLabels,
   muscleGroupLabels,
 } from '@/lib/labels';
+import { useSessionStore } from '@/stores/session';
+
+/** How many past appearances of this exercise to list. */
+const HISTORY_LIMIT = 5;
 
 export default function ExerciseDetailScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
   const theme = useTheme();
+  const completedSessions = useSessionStore((state) => state.completedSessions);
   const exercise = slug ? findExercise(slug) : undefined;
 
   if (!exercise) {
@@ -44,6 +51,9 @@ export default function ExerciseDetailScreen() {
     { label: 'Pattern', value: movementPatternLabels[exercise.movementPattern] },
   ];
 
+  const history = exerciseHistory(completedSessions, exercise.id);
+  const best = personalBest(completedSessions, exercise.id);
+
   return (
     <ThemedView style={styles.container}>
       <Stack.Screen options={{ headerShown: true, title: exercise.name }} />
@@ -68,6 +78,28 @@ export default function ExerciseDetailScreen() {
             </View>
           ))}
         </View>
+
+        {history.length > 0 && (
+          <View style={styles.section}>
+            <ThemedText variant="subtitle">Your history</ThemedText>
+            {best && (
+              <View style={[styles.best, { backgroundColor: theme.colors.surface }]}>
+                <Ionicons name="trophy-outline" size={18} color={theme.colors.primary} />
+                <ThemedText variant="small" style={styles.stepText}>
+                  Best set: {formatSet(best)}
+                </ThemedText>
+              </View>
+            )}
+            {history.slice(0, HISTORY_LIMIT).map((entry) => (
+              <View key={entry.sessionId} style={styles.historyRow}>
+                <ThemedText variant="small" color="textSecondary">
+                  {formatDate(entry.date)}
+                </ThemedText>
+                <ThemedText variant="small">{formatSetLine(entry.sets)}</ThemedText>
+              </View>
+            ))}
+          </View>
+        )}
 
         <View style={styles.section}>
           <ThemedText variant="subtitle">How to do it</ThemedText>
@@ -171,5 +203,18 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     padding: spacing.md,
     borderRadius: radii.md,
+  },
+  best: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    padding: spacing.md,
+    borderRadius: radii.md,
+  },
+  historyRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+    paddingHorizontal: spacing.xs,
   },
 });
