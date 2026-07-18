@@ -10,6 +10,7 @@ import { findExercise } from '@/data/exercises';
 import { useTheme } from '@/hooks/use-theme';
 import { confirmAction } from '@/lib/confirm';
 import { formatRest, formatTargets } from '@/lib/format';
+import { useSessionStore } from '@/stores/session';
 import { useWorkoutsStore } from '@/stores/workouts';
 
 export default function WorkoutDetailScreen() {
@@ -19,6 +20,8 @@ export default function WorkoutDetailScreen() {
   const workout = useWorkoutsStore((state) => state.workouts.find((w) => w.id === id));
   const duplicateWorkout = useWorkoutsStore((state) => state.duplicateWorkout);
   const deleteWorkout = useWorkoutsStore((state) => state.deleteWorkout);
+  const activeSession = useSessionStore((state) => state.activeSession);
+  const startSession = useSessionStore((state) => state.startSession);
 
   if (!workout) {
     return (
@@ -29,6 +32,32 @@ export default function WorkoutDetailScreen() {
       </ThemedView>
     );
   }
+
+  const isResumable = activeSession?.workoutId === workout.id;
+
+  const handleStart = () => {
+    if (isResumable && activeSession) {
+      router.push(`/session/${activeSession.id}`);
+      return;
+    }
+    const begin = () => {
+      const session = startSession(workout);
+      router.push(`/session/${session.id}`);
+    };
+    if (activeSession) {
+      confirmAction(
+        {
+          title: 'Start a new workout?',
+          message: 'You have another workout in progress. Starting this one will discard it.',
+          confirmLabel: 'Start new',
+          destructive: true,
+        },
+        begin,
+      );
+    } else {
+      begin();
+    }
+  };
 
   const handleDelete = () => {
     confirmAction(
@@ -49,8 +78,11 @@ export default function WorkoutDetailScreen() {
     <ThemedView style={styles.container}>
       <Stack.Screen options={{ headerShown: true, title: workout.name }} />
       <ScrollView contentContainerStyle={styles.content}>
-        {/* Active workout arrives in the next milestone — the button is honest about it. */}
-        <Button label="Start workout (coming soon)" onPress={() => {}} disabled />
+        <Button
+          label={isResumable ? 'Resume workout' : 'Start workout'}
+          onPress={handleStart}
+          disabled={workout.exercises.length === 0}
+        />
 
         <View style={styles.section}>
           <ThemedText variant="subtitle">Exercises</ThemedText>
