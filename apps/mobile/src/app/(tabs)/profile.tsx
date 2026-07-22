@@ -1,15 +1,35 @@
 import { Ionicons } from '@expo/vector-icons';
+import type { ColorName } from '@fitness-app/ui';
 import { radii, spacing } from '@fitness-app/ui';
 import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { Button } from '@/components/button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useTheme } from '@/hooks/use-theme';
 import { confirmAction } from '@/lib/confirm';
 import { useAuthStore } from '@/stores/auth';
+import { type SyncStatus, useSyncStore } from '@/stores/sync';
+
+const SYNC_COPY: Record<
+  SyncStatus,
+  { label: string; icon: keyof typeof Ionicons.glyphMap; color: ColorName }
+> = {
+  idle: { label: 'Not backed up yet', icon: 'cloud-outline', color: 'textSecondary' },
+  syncing: { label: 'Backing up…', icon: 'sync-outline', color: 'textSecondary' },
+  synced: { label: 'Workouts backed up', icon: 'cloud-done-outline', color: 'success' },
+  unavailable: {
+    label: 'Cloud backup isn’t set up yet',
+    icon: 'cloud-offline-outline',
+    color: 'textSecondary',
+  },
+  error: {
+    label: 'Couldn’t back up — tap Sync to retry',
+    icon: 'warning-outline',
+    color: 'danger',
+  },
+};
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -17,6 +37,8 @@ export default function ProfileScreen() {
   const user = useAuthStore((state) => state.user);
   const ready = useAuthStore((state) => state.ready);
   const signOut = useAuthStore((state) => state.signOut);
+  const syncStatus = useSyncStore((state) => state.status);
+  const syncNow = useSyncStore((state) => state.syncNow);
 
   const handleSignOut = () => {
     confirmAction(
@@ -50,6 +72,28 @@ export default function ProfileScreen() {
                   <ThemedText variant="bodyBold">{user.email}</ThemedText>
                 </View>
               </View>
+
+              <View style={[styles.syncRow, { backgroundColor: theme.colors.surface }]}>
+                <Ionicons
+                  name={SYNC_COPY[syncStatus].icon}
+                  size={20}
+                  color={theme.colors[SYNC_COPY[syncStatus].color]}
+                />
+                <ThemedText
+                  variant="small"
+                  color={SYNC_COPY[syncStatus].color}
+                  style={styles.syncLabel}
+                >
+                  {SYNC_COPY[syncStatus].label}
+                </ThemedText>
+              </View>
+              <Button
+                label={syncStatus === 'syncing' ? 'Syncing…' : 'Sync now'}
+                variant="secondary"
+                disabled={syncStatus === 'syncing'}
+                onPress={() => void syncNow(user.id)}
+              />
+
               <Button label="Sign out" variant="secondary" onPress={handleSignOut} />
             </>
           ) : (
@@ -108,5 +152,15 @@ const styles = StyleSheet.create({
   cardInfo: {
     flex: 1,
     gap: spacing.xxs,
+  },
+  syncRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    padding: spacing.md,
+    borderRadius: radii.md,
+  },
+  syncLabel: {
+    flex: 1,
   },
 });
