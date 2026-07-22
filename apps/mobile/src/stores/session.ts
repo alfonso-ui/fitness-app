@@ -31,6 +31,8 @@ type SessionState = {
 
   finishSession: () => WorkoutSession | null;
   cancelSession: () => void;
+  /** Merge completed sessions pulled from the cloud, keeping local ones. */
+  mergeRemoteSessions: (remote: WorkoutSession[]) => void;
 };
 
 function mapExercise(
@@ -184,6 +186,17 @@ export const useSessionStore = create<SessionState>()(
       },
 
       cancelSession: () => set({ activeSession: null, restEndsAt: null }),
+
+      mergeRemoteSessions: (remote) => {
+        const { completedSessions } = get();
+        const byId = new Map(completedSessions.map((session) => [session.id, session]));
+        // Completed sessions are immutable, so a simple union by id is
+        // enough — add any the device doesn't already have.
+        for (const session of remote) {
+          if (!byId.has(session.id)) byId.set(session.id, session);
+        }
+        set({ completedSessions: [...byId.values()] });
+      },
     }),
     {
       name: 'sessions-v1',

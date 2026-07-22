@@ -25,6 +25,8 @@ type WorkoutsState = {
   removeExercise: (workoutId: string, workoutExerciseId: string) => void;
   moveExercise: (workoutId: string, workoutExerciseId: string, direction: -1 | 1) => void;
   updateExercise: (workoutId: string, workoutExerciseId: string, patch: ExercisePatch) => void;
+  /** Merge workouts pulled from the cloud, newer `updatedAt` winning per id. */
+  mergeRemoteWorkouts: (remote: Workout[]) => void;
 };
 
 function withUpdate(
@@ -137,6 +139,18 @@ export const useWorkoutsStore = create<WorkoutsState>()(
             ),
           })),
         }));
+      },
+
+      mergeRemoteWorkouts: (remote) => {
+        const byId = new Map(get().workouts.map((workout) => [workout.id, workout]));
+        for (const incoming of remote) {
+          const existing = byId.get(incoming.id);
+          // Last-write-wins: adopt the remote row only when it is newer.
+          if (!existing || incoming.updatedAt > existing.updatedAt) {
+            byId.set(incoming.id, incoming);
+          }
+        }
+        set({ workouts: [...byId.values()] });
       },
     }),
     {

@@ -2,7 +2,7 @@
 
 A living map of what actually exists in this repository. Update it when the architecture changes, not for every commit.
 
-_Last updated: 2026-07-19 (Supabase auth milestone)._
+_Last updated: 2026-07-20 (cloud sync milestone)._
 
 ## Current state
 
@@ -25,17 +25,19 @@ fitness-app/                 npm-workspaces monorepo
 │   │       ├── data/        exercises/ — 34-exercise seed catalog (ADR 0004);
 │   │       │                templates — 4 starter workout templates
 │   │       ├── stores/      workouts (ADR 0005) · session (ADR 0006) — Zustand +
-│   │       │                AsyncStorage, local-first · auth — mirrors Supabase
+│   │       │                AsyncStorage, local-first · auth — mirrors Supabase ·
+│   │       │                sync — status + auto-sync on sign-in (ADR 0008)
 │   │       ├── hooks/       useTheme, useColorScheme, useCountdown
-│   │       └── lib/         labels, format, confirm, id, session, history, supabase
+│   │       └── lib/         labels, format, confirm, id, session, history,
+│   │                        supabase, sync (push/pull, last-write-wins)
 │   └── admin/               placeholder — out of MVP scope
 ├── packages/
 │   ├── ui/                  @fitness-app/ui — design tokens (colors/spacing/radii/typography), light+dark
 │   ├── types/               @fitness-app/types — starter domain types
 │   └── config/              @fitness-app/config — shared tsconfig base
 ├── supabase/
-│   └── migrations/          0001_profiles — profiles table, RLS policies,
-│                            auto-create-profile trigger (ADR 0007)
+│   └── migrations/          0001_profiles (ADR 0007) · 0002_workouts_sessions —
+│                            workouts + sessions tables, RLS, jsonb rows (ADR 0008)
 └── docs/
     └── decisions/           ADRs 0001–0006 (workspaces, styling, Biome,
                              seed data, local persistence, active sessions)

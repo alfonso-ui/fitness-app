@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAuthStore } from '@/stores/auth';
+import { useAutoSync } from '@/stores/sync';
 
 export default function RootLayout() {
   const initializeAuth = useAuthStore((state) => state.initialize);
@@ -15,6 +16,8 @@ export default function RootLayout() {
 
   // Restore any stored session and keep the store in sync with Supabase.
   useEffect(() => initializeAuth(), [initializeAuth]);
+  // Push/pull cloud data whenever a user is signed in.
+  useAutoSync();
 
   // Keep React Navigation's chrome (headers, tab bar, backgrounds) in
   // sync with our design tokens so no screen ever mixes color systems.
