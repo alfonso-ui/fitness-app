@@ -2,7 +2,7 @@
 
 A living map of what actually exists in this repository. Update it when the architecture changes, not for every commit.
 
-_Last updated: 2026-07-18 (history + progress milestone)._
+_Last updated: 2026-07-19 (Supabase auth milestone)._
 
 ## Current state
 
@@ -17,22 +17,25 @@ fitness-app/                 npm-workspaces monorepo
 │   │       │   ├── exercise/[slug]    exercise detail (stack screen with header)
 │   │       │   ├── workout/[id]/      detail (+ Start/Resume) · edit · add-exercise
 │   │       │   ├── session/[id]/      Focus Mode · summary · substitute (ADR 0006)
-│   │       │   └── history/[id]       completed workout detail (+ repeat)
+│   │       │   ├── history/[id]       completed workout detail (+ repeat)
+│   │       │   └── auth/              sign-in · sign-up · forgot-password (ADR 0007)
 │   │       ├── components/  ThemedText, ThemedView, ScreenPlaceholder, Button, Stepper,
 │   │       │                ExerciseCard, ExercisePickerList, FilterChip, SearchInput,
 │   │       │                RestTimerBar
 │   │       ├── data/        exercises/ — 34-exercise seed catalog (ADR 0004);
 │   │       │                templates — 4 starter workout templates
-│   │       ├── stores/      workouts (ADR 0005) · session — active/completed sessions (ADR 0006);
-│   │       │                both Zustand + AsyncStorage, local-first
+│   │       ├── stores/      workouts (ADR 0005) · session (ADR 0006) — Zustand +
+│   │       │                AsyncStorage, local-first · auth — mirrors Supabase
 │   │       ├── hooks/       useTheme, useColorScheme, useCountdown
-│   │       └── lib/         labels, format, confirm, id, session, history
+│   │       └── lib/         labels, format, confirm, id, session, history, supabase
 │   └── admin/               placeholder — out of MVP scope
 ├── packages/
 │   ├── ui/                  @fitness-app/ui — design tokens (colors/spacing/radii/typography), light+dark
 │   ├── types/               @fitness-app/types — starter domain types
 │   └── config/              @fitness-app/config — shared tsconfig base
-├── supabase/                placeholder — backend milestone
+├── supabase/
+│   └── migrations/          0001_profiles — profiles table, RLS policies,
+│                            auto-create-profile trigger (ADR 0007)
 └── docs/
     └── decisions/           ADRs 0001–0006 (workspaces, styling, Biome,
                              seed data, local persistence, active sessions)

@@ -25,5 +25,6 @@ Working name **LiftFlow** (subject to change — never hard-code permanent brand
 - Styling: React Native StyleSheet + typed tokens from `@fitness-app/ui`. No hard-coded colors/spacing in screens. NativeWind deliberately deferred (ADR 0002).
 - Lint/format: Biome only (`npm run lint`, `npm run format`). No ESLint/Prettier.
 - Typecheck everything: `npm run typecheck` (strict mode; keep it passing).
+- **Static-render gotcha:** `npx expo export --platform web` renders in Node, where `window` is undefined. Module-level code that touches storage (AsyncStorage, `localStorage`) or writes to a persisted store during hydration will crash the export — and silently kill the dev server. Guard it with `typeof window !== 'undefined'`. Typecheck will not catch this; always run the export before calling a milestone done.
 - Approved stack for later milestones: Supabase, Zustand, TanStack Query, React Hook Form, Zod — add each dependency only when its milestone starts.
 - Internal package scope is `@fitness-app/*` (brand-neutral on purpose).
